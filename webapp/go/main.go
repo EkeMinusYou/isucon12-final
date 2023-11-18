@@ -1077,9 +1077,9 @@ func (h *Handler) drawGacha(c echo.Context) error {
 		return errorResponse(c, http.StatusConflict, fmt.Errorf("not enough isucon"))
 	}
 
-	query = "SELECT * FROM gacha_masters WHERE id=? AND start_at <= ? AND end_at >= ?"
+	query = "SELECT * FROM gacha_masters WHERE id=? AND start_at <= ?"
 	gachaInfo := new(GachaMaster)
-	if err = h.DB.Get(gachaInfo, query, gachaID, requestAt, requestAt); err != nil {
+	if err = h.DB.Get(gachaInfo, query, gachaID, requestAt); err != nil {
 		if sql.ErrNoRows == err {
 			return errorResponse(c, http.StatusNotFound, fmt.Errorf("not found gacha"))
 		}
