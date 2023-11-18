@@ -1,6 +1,6 @@
 SSH_USER:=ubuntu
 ISUCON_USER:=isucon
-APP_NAME:=isuports
+APP_NAME:=isuconquest
 
 NGINX_HOST:=isucon-1
 WEBAPP_HOST:=isucon-1
