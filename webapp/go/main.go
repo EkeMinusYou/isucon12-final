@@ -49,7 +49,7 @@ type Handler struct {
 	DB *sqlx.DB
 }
 
-func main() {
+func Run() {
 	rand.Seed(time.Now().UnixNano())
 	time.Local = time.FixedZone("Local", 9*60*60)
 
