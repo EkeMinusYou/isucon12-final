@@ -3,3 +3,70 @@
 2023/11/19 15:13:33 [notice] 5613#5613: signal process started
 2023/11/19 15:13:45 [error] 511#511: *6499 connect() failed (111: Unknown error) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /initialize HTTP/1.1", upstream: "http://127.0.0.1:8080/initialize", host: "172.31.23.240"
 2023/11/19 15:16:20 [notice] 24073#24073: signal process started
+2023/11/19 15:26:32 [notice] 34991#34991: signal process started
+2023/11/19 15:28:53 [notice] 36244#36244: signal process started
+2023/11/19 15:30:33 [alert] 511#511: *18823 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:33 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:33 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:34 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:34 [alert] 511#511: *19179 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:35 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:36 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:36 [alert] 511#511: *19574 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:36 [alert] 511#511: *19577 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:36 [alert] 511#511: *19581 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:36 [alert] 511#511: *19582 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:36 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:37 [alert] 511#511: *19725 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:37 [alert] 511#511: *19728 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:37 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:38 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:39 [alert] 511#511: *19997 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:39 [alert] 511#511: *19999 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:39 [alert] 511#511: *20004 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:39 [alert] 511#511: *20009 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:39 [alert] 511#511: *20011 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:39 [alert] 511#511: *20012 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:39 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:39 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:40 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:40 [alert] 511#511: *20331 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:40 [alert] 511#511: *20348 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:40 [alert] 511#511: *20349 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:40 [alert] 511#511: *20350 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:40 [alert] 511#511: *20351 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:40 [alert] 511#511: *20352 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:40 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:41 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:42 [alert] 511#511: *20604 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20608 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20620 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20622 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20623 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20624 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20637 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20638 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20640 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20641 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20655 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20656 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20658 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20660 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20662 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20663 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20665 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20666 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20667 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20669 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20671 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20229 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "GET /user/9375866854/gacha/index HTTP/1.1", upstream: "http://127.0.0.1:8080/user/9375866854/gacha/index", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20677 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user/9375866854/gacha/draw/37/10 HTTP/1.1", upstream: "http://127.0.0.1:8080/user/9375866854/gacha/draw/37/10", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20678 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20680 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20682 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20708 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20713 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20714 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [alert] 511#511: *20715 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/19 15:30:42 [crit] 511#511: accept4() failed (24: Too many open files)
+2023/11/19 15:30:43 [crit] 511#511: accept4() failed (24: Too many open files)
