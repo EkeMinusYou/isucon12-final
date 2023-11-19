@@ -1,0 +1,1 @@
+{"time":"19/Nov/2023:15:13:45 +0000","host":"172.31.37.105","forwardedfor":"","req":"POST /initialize HTTP/1.1","status":"502","method":"POST","uri":"/initialize","body_bytes":166,"referer":"","ua":"isucandar","request_time":0.001,"cache":"","runtime":"","response_time":"0.000","vhost":"172.31.23.240"}
