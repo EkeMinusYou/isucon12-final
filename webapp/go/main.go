@@ -121,6 +121,7 @@ func connectDB(batch bool) (*sqlx.DB, error) {
 		batch,
 	)
 	dbx, err := sqlx.Open("mysql", dsn)
+	dbx.SetMaxOpenConns(50)
 	if err != nil {
 		return nil, err
 	}
