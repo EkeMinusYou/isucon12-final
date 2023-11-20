@@ -42,3 +42,4 @@
 2023/11/20 14:34:10 [alert] 451#451: *8216 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "GET /user/227286705127563558/home HTTP/1.1", upstream: "http://127.0.0.1:8080/user/227286705127563558/home", host: "172.31.23.240"
 2023/11/20 14:34:11 [crit] 451#451: accept4() failed (24: Too many open files)
 2023/11/20 14:34:11 [crit] 451#451: accept4() failed (24: Too many open files)
+2023/11/20 14:51:52 [notice] 3592#3592: signal process started
