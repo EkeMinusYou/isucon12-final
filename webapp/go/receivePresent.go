@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -127,13 +126,13 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
-	var presentIDs []int64
+	var enhancePresentIDs []int64
 	for _, v := range obtainEnhancePresent {
-		presentIDs = append(presentIDs, v.ID)
+		enhancePresentIDs = append(enhancePresentIDs, v.ID)
 	}
-	if len(presentIDs) != 0 {
+	if len(obtainEnhancePresent) != 0 {
 		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id IN (?)"
-		query, params, err = sqlx.In(query, requestAt, requestAt, presentIDs)
+		query, params, err = sqlx.In(query, requestAt, requestAt, enhancePresentIDs)
 		if err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
@@ -143,14 +142,33 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
+	obtainEnhancePresentItemIDs := make([]int64, 0)
 	for _, v := range obtainEnhancePresent {
-		query := "SELECT * FROM item_masters WHERE id=? AND item_type=?"
-		item := new(ItemMaster)
-		if err := tx.Get(item, query, v.ItemID, v.ItemType); err != nil {
-			if err == sql.ErrNoRows {
-				return errorResponse(c, http.StatusNotFound, ErrItemNotFound)
-			}
+		obtainEnhancePresentItemIDs = append(obtainEnhancePresentItemIDs, v.ItemID)
+	}
+
+	itemMasters := make([]*ItemMaster, 0)
+	if len(obtainEnhancePresentItemIDs) != 0 {
+		query = "SELECT * FROM item_masters WHERE id IN (?) AND item_type IN (3, 4)"
+		query, params, err = sqlx.In(query, obtainEnhancePresentItemIDs)
+		if err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+		if err := tx.Select(&itemMasters, query, params...); err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
+
+	for _, v := range obtainEnhancePresent {
+		var seen bool
+		for _, itemMaster := range itemMasters {
+			if v.ItemID == itemMaster.ID {
+				seen = true
+				break
+			}
+		}
+		if !seen {
+			return errorResponse(c, http.StatusNotFound, ErrItemNotFound)
 		}
 
 		_, err = h.obtianEnhanceItemForRecieveItem(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)

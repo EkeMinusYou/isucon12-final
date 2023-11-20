@@ -164,3 +164,13 @@
 2023/11/20 17:54:01 [crit] 35462#35462: accept4() failed (24: Too many open files)
 2023/11/20 17:57:32 [notice] 39388#39388: signal process started
 2023/11/20 18:10:52 [notice] 44487#44487: signal process started
+2023/11/20 18:24:53 [alert] 35462#35462: *35929 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 18:24:53 [alert] 35462#35462: *35968 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 18:24:53 [alert] 35462#35462: *35969 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 18:24:54 [alert] 35462#35462: *35970 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 18:24:54 [alert] 35462#35462: *35972 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 18:24:54 [alert] 35462#35462: *35973 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 18:24:54 [alert] 35462#35462: *35974 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 18:24:54 [crit] 35462#35462: accept4() failed (24: Too many open files)
+2023/11/20 18:29:31 [notice] 46600#46600: signal process started
+2023/11/20 18:33:37 [notice] 47566#47566: signal process started
