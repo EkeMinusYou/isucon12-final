@@ -143,16 +143,7 @@ func (h *Handler) obtianEnhanceItem(tx *sqlx.Tx, userID, itemID int64, itemType 
 	return obtainItems, nil
 }
 
-func (h *Handler) obtianEnhanceItemForRecieveItem(tx *sqlx.Tx, userID, itemID int64, itemType int, obtainAmount int64, requestAt int64) (*UserItem, error) {
-	query := "SELECT * FROM user_items WHERE user_id=? AND item_id=?"
-	uitem := new(UserItem)
-	if err := tx.Get(uitem, query, userID, itemID); err != nil {
-		if err != sql.ErrNoRows {
-			return nil, err
-		}
-		uitem = nil
-	}
-
+func (h *Handler) obtianEnhanceItemForRecieveItem(tx *sqlx.Tx, userID int64, uitem *UserItem, itemID int64, itemType int, obtainAmount int64, requestAt int64) (*UserItem, error) {
 	if uitem == nil {
 		uitemID, err := h.generateID()
 		if err != nil {
@@ -167,7 +158,7 @@ func (h *Handler) obtianEnhanceItemForRecieveItem(tx *sqlx.Tx, userID, itemID in
 			CreatedAt: requestAt,
 			UpdatedAt: requestAt,
 		}
-		query = "INSERT INTO user_items(id, user_id, item_id, item_type, amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+		query := "INSERT INTO user_items(id, user_id, item_id, item_type, amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
 		if _, err := tx.Exec(query, uitem.ID, userID, uitem.ItemID, uitem.ItemType, uitem.Amount, requestAt, requestAt); err != nil {
 			return nil, err
 		}
@@ -175,7 +166,7 @@ func (h *Handler) obtianEnhanceItemForRecieveItem(tx *sqlx.Tx, userID, itemID in
 	} else {
 		uitem.Amount += int(obtainAmount)
 		uitem.UpdatedAt = requestAt
-		query = "UPDATE user_items SET amount=?, updated_at=? WHERE id=?"
+		query := "UPDATE user_items SET amount=?, updated_at=? WHERE id=?"
 		if _, err := tx.Exec(query, uitem.Amount, uitem.UpdatedAt, uitem.ID); err != nil {
 			return nil, err
 		}

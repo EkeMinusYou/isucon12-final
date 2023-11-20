@@ -159,6 +159,18 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
+	uitems := make([]*UserItem, 0)
+	if len(obtainEnhancePresentItemIDs) != 0 {
+		query = "SELECT * FROM user_items WHERE user_id=? AND item_id IN (?)"
+		query, params, err = sqlx.In(query, userID, obtainEnhancePresentItemIDs)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+		if err := tx.Select(&uitems, query, params...); err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
+
 	for _, v := range obtainEnhancePresent {
 		var seen bool
 		for _, itemMaster := range itemMasters {
@@ -171,7 +183,15 @@ func (h *Handler) receivePresent(c echo.Context) error {
 			return errorResponse(c, http.StatusNotFound, ErrItemNotFound)
 		}
 
-		_, err = h.obtianEnhanceItemForRecieveItem(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+		var uitem *UserItem
+		for _, candidate := range uitems {
+			if v.ItemID == candidate.ItemID {
+				uitem = candidate
+				break
+			}
+		}
+
+		_, err = h.obtianEnhanceItemForRecieveItem(tx, userID, uitem, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
 
 		if err != nil {
 			if err == ErrUserNotFound {
