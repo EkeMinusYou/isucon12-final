@@ -126,13 +126,23 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
+	var presentIDs []int64
 	for _, v := range obtainEnhancePresent {
-		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
-		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
+		presentIDs = append(presentIDs, v.ID)
+	}
+	if len(presentIDs) != 0 {
+		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id IN (?)"
+		query, params, err = sqlx.In(query, requestAt, requestAt, presentIDs)
 		if err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
+		_, err = tx.Exec(query, params...)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
 
+	for _, v := range obtainEnhancePresent {
 		_, err = h.obtainItems(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
 
 		if err != nil {
