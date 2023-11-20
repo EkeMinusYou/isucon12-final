@@ -61,10 +61,22 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 	defer tx.Rollback() //nolint:errcheck
 
+	obtainPresentIds := make([]int64, 0)
 	for _, v := range obtainPresent {
 		if v.ItemType != 1 && v.ItemType != 2 && v.ItemType != 3 && v.ItemType != 4 {
 			return errorResponse(c, http.StatusBadRequest, ErrInvalidItemType)
 		}
+		obtainPresentIds = append(obtainPresentIds, v.ID)
+	}
+
+	query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id IN (?)"
+	query, params, err = sqlx.In(query, requestAt, requestAt, obtainPresentIds)
+	if err != nil {
+		return errorResponse(c, http.StatusInternalServerError, err)
+	}
+	_, err = tx.Exec(query, params...)
+	if err != nil {
+		return errorResponse(c, http.StatusInternalServerError, err)
 	}
 
 	for i := range obtainPresent {
@@ -81,12 +93,6 @@ func (h *Handler) receivePresent(c echo.Context) error {
 
 	// 配布処理
 	for _, v := range obtainCoinPresent {
-		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
-		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
-		if err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
-		}
-
 		_, err = h.obtainCoins(tx, userID, int64(v.Amount))
 
 		if err != nil {
@@ -101,12 +107,6 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	for _, v := range obtainPresent {
 		if v.ItemType != 2 {
 			continue
-		}
-
-		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
-		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
-		if err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 
 		_, err = h.obtainCards(tx, v.UserID, v.ItemID, v.ItemType, requestAt)
@@ -124,22 +124,6 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	for _, v := range obtainPresent {
 		if v.ItemType == 3 || v.ItemType == 4 {
 			obtainEnhancePresent = append(obtainEnhancePresent, v)
-		}
-	}
-
-	var enhancePresentIDs []int64
-	for _, v := range obtainEnhancePresent {
-		enhancePresentIDs = append(enhancePresentIDs, v.ID)
-	}
-	if len(obtainEnhancePresent) != 0 {
-		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id IN (?)"
-		query, params, err = sqlx.In(query, requestAt, requestAt, enhancePresentIDs)
-		if err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
-		}
-		_, err = tx.Exec(query, params...)
-		if err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 	}
 
