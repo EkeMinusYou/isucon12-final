@@ -72,7 +72,17 @@ func (h *Handler) receivePresent(c echo.Context) error {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 
-		_, _, _, err = h.obtainItem(tx, v.UserID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+		switch obtainPresent[i].ItemType {
+		case 1: // coin
+			_, err = h.obtainCoins(tx, userID, int64(v.Amount))
+		case 2: // card(ハンマー)
+			_, err = h.obtainCards(tx, v.UserID, v.ItemID, v.ItemType, requestAt)
+		case 3, 4: // 強化素材
+			_, err = h.obtainItems(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+		default:
+			err = ErrInvalidItemType
+		}
+
 		if err != nil {
 			if err == ErrUserNotFound || err == ErrItemNotFound {
 				return errorResponse(c, http.StatusNotFound, err)
