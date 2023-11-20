@@ -119,11 +119,14 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// 配布処理
+	obtainEnhancePresent := make([]*UserPresent, 0)
 	for _, v := range obtainPresent {
-		if v.ItemType != 3 && v.ItemType != 4 {
-			continue
+		if v.ItemType == 3 || v.ItemType == 4 {
+			obtainEnhancePresent = append(obtainEnhancePresent, v)
 		}
+	}
 
+	for _, v := range obtainEnhancePresent {
 		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
 		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
 		if err != nil {
