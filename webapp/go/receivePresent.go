@@ -100,12 +100,14 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 		return errorResponse(c, http.StatusInternalServerError, err)
 	}
+	amount := int64(0)
 	for _, v := range obtainCoinPresent {
-		_, err = h.obtainCoinsForItemReceive(tx, user, int64(v.Amount))
+		amount += int64(v.Amount)
+	}
+	_, err = h.obtainCoinsForItemReceive(tx, user, amount)
 
-		if err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
-		}
+	if err != nil {
+		return errorResponse(c, http.StatusInternalServerError, err)
 	}
 
 	// 配布処理
