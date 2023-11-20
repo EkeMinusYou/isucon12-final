@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -143,10 +144,19 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	for _, v := range obtainEnhancePresent {
-		_, err = h.obtianEnhanceItem(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+		query := "SELECT * FROM item_masters WHERE id=? AND item_type=?"
+		item := new(ItemMaster)
+		if err := tx.Get(item, query, v.ItemID, v.ItemType); err != nil {
+			if err == sql.ErrNoRows {
+				return errorResponse(c, http.StatusNotFound, ErrItemNotFound)
+			}
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+
+		_, err = h.obtianEnhanceItemForRecieveItem(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
 
 		if err != nil {
-			if err == ErrUserNotFound || err == ErrItemNotFound {
+			if err == ErrUserNotFound {
 				return errorResponse(c, http.StatusNotFound, err)
 			}
 			return errorResponse(c, http.StatusInternalServerError, err)
