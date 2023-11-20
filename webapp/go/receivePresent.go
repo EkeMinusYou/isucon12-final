@@ -63,10 +63,6 @@ func (h *Handler) receivePresent(c echo.Context) error {
 
 	// 配布処理
 	for i := range obtainPresent {
-		if obtainPresent[i].DeletedAt != nil {
-			return errorResponse(c, http.StatusInternalServerError, fmt.Errorf("received present"))
-		}
-
 		obtainPresent[i].UpdatedAt = requestAt
 		obtainPresent[i].DeletedAt = &requestAt
 		v := obtainPresent[i]
