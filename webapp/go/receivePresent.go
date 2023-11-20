@@ -67,10 +67,13 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
-	// 配布処理
 	for i := range obtainPresent {
 		obtainPresent[i].UpdatedAt = requestAt
 		obtainPresent[i].DeletedAt = &requestAt
+	}
+
+	// 配布処理
+	for i := range obtainPresent {
 		v := obtainPresent[i]
 
 		if v.ItemType != 1 {
@@ -94,11 +97,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// 配布処理
-	for i := range obtainPresent {
-		obtainPresent[i].UpdatedAt = requestAt
-		obtainPresent[i].DeletedAt = &requestAt
-		v := obtainPresent[i]
-
+	for _, v := range obtainPresent {
 		if v.ItemType != 2 {
 			continue
 		}
@@ -120,11 +119,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// 配布処理
-	for i := range obtainPresent {
-		obtainPresent[i].UpdatedAt = requestAt
-		obtainPresent[i].DeletedAt = &requestAt
-		v := obtainPresent[i]
-
+	for _, v := range obtainPresent {
 		if v.ItemType != 3 && v.ItemType != 4 {
 			continue
 		}
