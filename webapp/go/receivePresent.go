@@ -143,7 +143,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	for _, v := range obtainEnhancePresent {
-		_, err = h.obtainItems(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+		_, err = h.obtianEnhanceItem(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
 
 		if err != nil {
 			if err == ErrUserNotFound || err == ErrItemNotFound {

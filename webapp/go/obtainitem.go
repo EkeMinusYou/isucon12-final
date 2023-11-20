@@ -22,7 +22,7 @@ func (h *Handler) obtainItem(tx *sqlx.Tx, userID, itemID int64, itemType int, ob
 		}
 		return nil, obtainCards, nil, nil
 	case 3, 4: // 強化素材
-		obtainItems, err := h.obtainItems(tx, userID, itemID, itemType, obtainAmount, requestAt)
+		obtainItems, err := h.obtianEnhanceItem(tx, userID, itemID, itemType, obtainAmount, requestAt)
 		if err != nil {
 			return nil, nil, nil, err
 		}
@@ -89,7 +89,7 @@ func (h *Handler) obtainCards(tx *sqlx.Tx, userID, itemID int64, itemType int, r
 	return obtainCards, err
 }
 
-func (h *Handler) obtainItems(tx *sqlx.Tx, userID, itemID int64, itemType int, obtainAmount int64, requestAt int64) ([]*UserItem, error) {
+func (h *Handler) obtianEnhanceItem(tx *sqlx.Tx, userID, itemID int64, itemType int, obtainAmount int64, requestAt int64) ([]*UserItem, error) {
 	obtainItems := make([]*UserItem, 0)
 
 	query := "SELECT * FROM item_masters WHERE id=? AND item_type=?"
