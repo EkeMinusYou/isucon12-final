@@ -61,34 +61,85 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 	defer tx.Rollback() //nolint:errcheck
 
+	for _, v := range obtainPresent {
+		if v.ItemType != 1 && v.ItemType != 2 && v.ItemType != 3 && v.ItemType != 4 {
+			return errorResponse(c, http.StatusBadRequest, ErrInvalidItemType)
+		}
+	}
+
 	// 配布処理
 	for i := range obtainPresent {
 		obtainPresent[i].UpdatedAt = requestAt
 		obtainPresent[i].DeletedAt = &requestAt
 		v := obtainPresent[i]
+
+		if v.ItemType != 1 {
+			continue
+		}
+
 		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
 		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
 		if err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 
-		switch obtainPresent[i].ItemType {
-		case 1: // coin
-			_, err = h.obtainCoins(tx, userID, int64(v.Amount))
-		case 2: // card(ハンマー)
-			_, err = h.obtainCards(tx, v.UserID, v.ItemID, v.ItemType, requestAt)
-		case 3, 4: // 強化素材
-			_, err = h.obtainItems(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
-		default:
-			err = ErrInvalidItemType
-		}
+		_, err = h.obtainCoins(tx, userID, int64(v.Amount))
 
 		if err != nil {
 			if err == ErrUserNotFound || err == ErrItemNotFound {
 				return errorResponse(c, http.StatusNotFound, err)
 			}
-			if err == ErrInvalidItemType {
-				return errorResponse(c, http.StatusBadRequest, err)
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
+
+	// 配布処理
+	for i := range obtainPresent {
+		obtainPresent[i].UpdatedAt = requestAt
+		obtainPresent[i].DeletedAt = &requestAt
+		v := obtainPresent[i]
+
+		if v.ItemType != 2 {
+			continue
+		}
+
+		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
+		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+
+		_, err = h.obtainCards(tx, v.UserID, v.ItemID, v.ItemType, requestAt)
+
+		if err != nil {
+			if err == ErrUserNotFound || err == ErrItemNotFound {
+				return errorResponse(c, http.StatusNotFound, err)
+			}
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
+
+	// 配布処理
+	for i := range obtainPresent {
+		obtainPresent[i].UpdatedAt = requestAt
+		obtainPresent[i].DeletedAt = &requestAt
+		v := obtainPresent[i]
+
+		if v.ItemType != 3 && v.ItemType != 4 {
+			continue
+		}
+
+		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
+		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+
+		_, err = h.obtainItems(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+
+		if err != nil {
+			if err == ErrUserNotFound || err == ErrItemNotFound {
+				return errorResponse(c, http.StatusNotFound, err)
 			}
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
