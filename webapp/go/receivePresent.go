@@ -72,14 +72,15 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		obtainPresent[i].DeletedAt = &requestAt
 	}
 
-	// 配布処理
-	for i := range obtainPresent {
-		v := obtainPresent[i]
-
-		if v.ItemType != 1 {
-			continue
+	obtainCoinPresent := make([]*UserPresent, 0)
+	for _, v := range obtainPresent {
+		if v.ItemType == 1 {
+			obtainCoinPresent = append(obtainCoinPresent, v)
 		}
+	}
 
+	// 配布処理
+	for _, v := range obtainCoinPresent {
 		query = "UPDATE user_presents SET deleted_at=?, updated_at=? WHERE id=?"
 		_, err := tx.Exec(query, requestAt, requestAt, v.ID)
 		if err != nil {
