@@ -91,14 +91,19 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
-	// 配布処理
+	// Coin配布処理
+	user := new(User)
+	query = "SELECT * FROM users WHERE id=?"
+	if err := tx.Get(user, query, userID); err != nil {
+		if err == ErrUserNotFound {
+			return errorResponse(c, http.StatusNotFound, err)
+		}
+		return errorResponse(c, http.StatusInternalServerError, err)
+	}
 	for _, v := range obtainCoinPresent {
-		_, err = h.obtainCoins(tx, userID, int64(v.Amount))
+		_, err = h.obtainCoinsForItemReceive(tx, user, int64(v.Amount))
 
 		if err != nil {
-			if err == ErrUserNotFound || err == ErrItemNotFound {
-				return errorResponse(c, http.StatusNotFound, err)
-			}
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 	}
@@ -119,7 +124,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
-	// 配布処理
+	// 強化アイテム配布処理
 	obtainEnhancePresent := make([]*UserPresent, 0)
 	for _, v := range obtainPresent {
 		if v.ItemType == 3 || v.ItemType == 4 {

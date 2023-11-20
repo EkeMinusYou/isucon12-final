@@ -54,6 +54,16 @@ func (h *Handler) obtainCoins(tx *sqlx.Tx, userID int64, obtainAmount int64) ([]
 	return obtainCoins, nil
 }
 
+func (h *Handler) obtainCoinsForItemReceive(tx *sqlx.Tx, user *User, obtainAmount int64) (int64, error) {
+	query := "UPDATE users SET isu_coin=? WHERE id=?"
+	totalCoin := user.IsuCoin + obtainAmount
+	if _, err := tx.Exec(query, totalCoin, user.ID); err != nil {
+		return 0, err
+	}
+
+	return obtainAmount, nil
+}
+
 func (h *Handler) obtainCards(tx *sqlx.Tx, userID, itemID int64, itemType int, requestAt int64) ([]*UserCard, error) {
 	obtainCards := make([]*UserCard, 0)
 

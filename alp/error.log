@@ -57,3 +57,34 @@
 2023/11/20 19:12:08 [alert] 58986#58986: *9985 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
 2023/11/20 19:12:08 [alert] 58986#58986: *10016 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
 2023/11/20 19:12:08 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:19:16 [notice] 64101#64101: signal process started
+2023/11/20 19:21:45 [alert] 58986#58986: *21798 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "GET /user/5548546893297986929/home HTTP/1.1", upstream: "http://127.0.0.1:8080/user/5548546893297986929/home", host: "172.31.23.240"
+2023/11/20 19:21:45 [alert] 58986#58986: *21800 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "GET /user/5548546893297986929/present/index/1 HTTP/1.1", upstream: "http://127.0.0.1:8080/user/5548546893297986929/present/index/1", host: "172.31.23.240"
+2023/11/20 19:21:45 [alert] 58986#58986: *21811 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:45 [alert] 58986#58986: *21735 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user/5548546893297987254/present/receive HTTP/1.1", upstream: "http://127.0.0.1:8080/user/5548546893297987254/present/receive", host: "172.31.23.240"
+2023/11/20 19:21:45 [alert] 58986#58986: *21821 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:45 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:46 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:47 [alert] 58986#58986: *22292 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:47 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:48 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:48 [crit] 58985#58985: accept4() failed (24: Too many open files)
+2023/11/20 19:21:49 [alert] 58986#58986: *22630 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:49 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:49 [alert] 58986#58986: *22632 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:49 [alert] 58985#58985: *22641 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:49 [crit] 58985#58985: accept4() failed (24: Too many open files)
+2023/11/20 19:21:49 [alert] 58985#58985: *22643 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:49 [alert] 58986#58986: *22726 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:49 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:49 [alert] 58986#58986: *22728 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:49 [crit] 58985#58985: accept4() failed (24: Too many open files)
+2023/11/20 19:21:49 [alert] 58985#58985: *22752 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:50 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:50 [alert] 58986#58986: *22820 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/20 19:21:50 [crit] 58985#58985: accept4() failed (24: Too many open files)
+2023/11/20 19:21:50 [alert] 58985#58985: *22843 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /user HTTP/1.1", upstream: "http://127.0.0.1:8080/user", host: "172.31.23.240"
+2023/11/20 19:21:50 [crit] 58986#58986: accept4() failed (24: Too many open files)
+2023/11/20 19:21:50 [alert] 58986#58986: *22912 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
+2023/11/20 19:21:50 [crit] 58985#58985: accept4() failed (24: Too many open files)
+2023/11/20 19:21:50 [alert] 58985#58985: *22933 socket() failed (24: Too many open files) while connecting to upstream, client: 172.31.37.105, server: , request: "POST /login HTTP/1.1", upstream: "http://127.0.0.1:8080/login", host: "172.31.23.240"
