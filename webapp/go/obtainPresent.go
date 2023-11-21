@@ -26,6 +26,7 @@ func (h *Handler) obtainPresent(tx *sqlx.Tx, userID int64, requestAt int64) ([]*
 		return nil, err
 	}
 
+	upList := make([]UserPresent, 0)
 L1:
 	for _, np := range normalPresents {
 		// プレゼント配布済
@@ -50,12 +51,17 @@ L1:
 			CreatedAt:      requestAt,
 			UpdatedAt:      requestAt,
 		}
-		query = "INSERT INTO user_presents(id, user_id, sent_at, item_type, item_id, amount, present_message, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-		if _, err := tx.Exec(query, up.ID, up.UserID, up.SentAt, up.ItemType, up.ItemID, up.Amount, up.PresentMessage, up.CreatedAt, up.UpdatedAt); err != nil {
-			return nil, err
-		}
+		upList = append(upList, *up)
 
 		obtainPresents = append(obtainPresents, up)
+	}
+
+	// bulk insert
+	if len(upList) > 0 {
+		_, err := tx.NamedExec("INSERT INTO user_presents(id, user_id, sent_at, item_type, item_id, amount, present_message, created_at, updated_at) VALUES (:id, :user_id, :sent_at, :item_type, :item_id, :amount, :present_message, :created_at, :updated_at)", upList)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 L2:
