@@ -27,6 +27,8 @@ func (h *Handler) obtainPresent(tx *sqlx.Tx, userID int64, requestAt int64) ([]*
 	}
 
 	upList := make([]UserPresent, 0)
+	historyList := make([]UserPresentAllReceivedHistory, 0)
+
 L1:
 	for _, np := range normalPresents {
 		// プレゼント配布済
@@ -54,24 +56,6 @@ L1:
 		upList = append(upList, *up)
 
 		obtainPresents = append(obtainPresents, up)
-	}
-
-	// bulk insert
-	if len(upList) > 0 {
-		_, err := tx.NamedExec("INSERT INTO user_presents(id, user_id, sent_at, item_type, item_id, amount, present_message, created_at, updated_at) VALUES (:id, :user_id, :sent_at, :item_type, :item_id, :amount, :present_message, :created_at, :updated_at)", upList)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-L2:
-	for _, np := range normalPresents {
-		// プレゼント配布済
-		for _, received := range receivedList {
-			if received.PresentAllID == np.ID {
-				continue L2
-			}
-		}
 
 		phID, err := h.generateID()
 		if err != nil {
@@ -85,18 +69,20 @@ L2:
 			CreatedAt:    requestAt,
 			UpdatedAt:    requestAt,
 		}
-		query = "INSERT INTO user_present_all_received_history(id, user_id, present_all_id, received_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)"
-		if _, err := tx.Exec(
-			query,
-			history.ID,
-			history.UserID,
-			history.PresentAllID,
-			history.ReceivedAt,
-			history.CreatedAt,
-			history.UpdatedAt,
-		); err != nil {
+		historyList = append(historyList, *history)
+	}
+
+	// bulk insert
+	if len(upList) > 0 {
+		_, err := tx.NamedExec("INSERT INTO user_presents(id, user_id, sent_at, item_type, item_id, amount, present_message, created_at, updated_at) VALUES (:id, :user_id, :sent_at, :item_type, :item_id, :amount, :present_message, :created_at, :updated_at)", upList)
+		if err != nil {
+			return nil, err
+		}
+		_, err = tx.NamedExec("INSERT INTO user_present_all_received_history(id, user_id, present_all_id, received_at, created_at, updated_at) VALUES (:id, :user_id, :present_all_id, :received_at, :created_at, :updated_at)", historyList)
+		if err != nil {
 			return nil, err
 		}
 	}
+
 	return obtainPresents, nil
 }
