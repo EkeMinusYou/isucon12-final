@@ -1666,8 +1666,8 @@ func noContentResponse(c echo.Context, status int) error {
 
 // generateID ユニークなIDを生成する
 func (h *Handler) generateID() (int64, error) {
-	id := DispenceId.Increment()
-	return id, nil
+	id := uuid.New().ID()
+	return int64(id), nil
 }
 
 // generateUUID UUIDの生成
