@@ -479,6 +479,18 @@ L1:
 			return nil, err
 		}
 
+		obtainPresents = append(obtainPresents, up)
+	}
+
+L2:
+	for _, np := range normalPresents {
+		// プレゼント配布済
+		for _, received := range receivedList {
+			if received.PresentAllID == np.ID {
+				continue L2
+			}
+		}
+
 		phID, err := h.generateID()
 		if err != nil {
 			return nil, err
@@ -503,10 +515,7 @@ L1:
 		); err != nil {
 			return nil, err
 		}
-
-		obtainPresents = append(obtainPresents, up)
 	}
-
 	return obtainPresents, nil
 }
 
