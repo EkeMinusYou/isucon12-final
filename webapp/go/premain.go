@@ -23,17 +23,20 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fcpu, err := os.Create(*fcpuprofile)
-		if err != nil {
-			log.Fatal(err)
+		var fcpu *os.File
+		var stop func() error
+		if *fcpuprofile != "" {
+			fcpu, err = os.Create(*fcpuprofile)
+			if err != nil {
+				log.Fatal(err)
+			}
+			stop = fgprof.Start(fcpu, fgprof.FormatPprof)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 
 		err = pprof.StartCPUProfile(cpu)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		stop := fgprof.Start(fcpu, fgprof.FormatPprof)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -42,10 +45,15 @@ func main() {
 			sig := make(chan os.Signal, 1)
 			signal.Notify(sig, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 			<-sig
+
 			pprof.StopCPUProfile()
 			cpu.Close()
-			stop()
-			fcpu.Close()
+
+			if stop != nil {
+				stop()
+				fcpu.Close()
+			}
+
 			os.Exit(0)
 		}()
 	}
