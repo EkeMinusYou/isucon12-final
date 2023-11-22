@@ -7,20 +7,33 @@ import (
 	"os/signal"
 	"runtime/pprof"
 	"syscall"
+
+	"github.com/felixge/fgprof"
 )
 
 var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
+var fcpuprofile = flag.String("fcpuprofile", "", "write fgprof cpu profile to file")
 
 func main() {
 	flag.Parse()
 
 	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
+		cpu, err := os.Create(*cpuprofile)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		err = pprof.StartCPUProfile(f)
+		fcpu, err := os.Create(*fcpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = pprof.StartCPUProfile(cpu)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		stop := fgprof.Start(fcpu, fgprof.FormatPprof)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -30,7 +43,9 @@ func main() {
 			signal.Notify(sig, syscall.SIGTERM, syscall.SIGINT, syscall.SIGQUIT)
 			<-sig
 			pprof.StopCPUProfile()
-			f.Close()
+			cpu.Close()
+			stop()
+			fcpu.Close()
 			os.Exit(0)
 		}()
 	}
