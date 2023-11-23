@@ -119,3 +119,12 @@ clear-cache:
 	ssh $(SSH_USER)@$(NGINX_HOST) "sudo journalctl --vacuum-size=10M"
 	ssh $(SSH_USER)@$(WEBAPP_HOST) "sudo -i -u $(ISUCON_USER) /home/linuxbrew/.linuxbrew/bin/zsh -c 'source ~/.zshrc && go clean -cache -testcache'"
 	ssh $(SSH_USER)@$(WEBAPP_HOST) "sudo journalctl --vacuum-size=10M"
+
+.PHONY: setup-google-service-account
+setup-google-service-account:
+	ssh $(SSH_USER)@$(WEBAPP_HOST) "sudo mkdir -p /home/$(ISUCON_USER)/.config/gcloud"
+	rsync -az -e ssh application_default_credentials.json $(SSH_USER)@$(WEBAPP_HOST):/home/$(ISUCON_USER)/.config/gcloud/application_default_credentials.json --rsync-path="sudo rsync"
+	ssh $(SSH_USER)@$(MYSQL_HOST) "sudo mkdir -p /home/$(ISUCON_USER)/.config/gcloud"
+	rsync -az -e ssh application_default_credentials.json $(SSH_USER)@$(MYSQL_HOST):/home/$(ISUCON_USER)/.config/gcloud/application_default_credentials.json --rsync-path="sudo rsync"
+	ssh $(SSH_USER)@$(NGINX_HOST) "sudo mkdir -p /home/$(ISUCON_USER)/.config/gcloud"
+	rsync -az -e ssh application_default_credentials.json $(SSH_USER)@$(NGINX_HOST):/home/$(ISUCON_USER)/.config/gcloud/application_default_credentials.json --rsync-path="sudo rsync"

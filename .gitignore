@@ -26,3 +26,4 @@ Temporary Items
 .apdisk
 
 slowquery/log/
+application_default_credentials.json

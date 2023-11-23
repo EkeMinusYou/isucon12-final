@@ -4,6 +4,7 @@ Description=isuconquest.go
 [Service]
 WorkingDirectory=/home/isucon/webapp/go
 EnvironmentFile=/home/isucon/env
+Environment=GOOGLE_CLOUD_PROJECT=isucon-406018
 PIDFile=/home/isucon/webapp/go/server.pid
 
 User=isucon
