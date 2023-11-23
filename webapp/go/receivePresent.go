@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
@@ -163,6 +164,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
+	updateUitems := make([]*UserItem, 0)
 	for _, v := range obtainEnhancePresent {
 		var seen bool
 		for _, itemMaster := range itemMasters {
@@ -195,13 +197,18 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		} else {
 			uitem.Amount += int(int64(v.Amount))
 			uitem.UpdatedAt = requestAt
-			query := "UPDATE user_items SET amount=?, updated_at=? WHERE id=?"
-			if _, err := tx.Exec(query, uitem.Amount, uitem.UpdatedAt, uitem.ID); err != nil {
-				if err == ErrUserNotFound {
-					return errorResponse(c, http.StatusNotFound, err)
-				}
-				return errorResponse(c, http.StatusInternalServerError, err)
-			}
+			updateUitems = append(updateUitems, uitem)
+		}
+	}
+
+	if len(updateUitems) != 0 {
+		query, err := BulkUpsertUserItems(tx, "user_items", updateUitems)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+		_, err = tx.Exec(query)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 	}
 
@@ -213,4 +220,19 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	return successResponse(c, &ReceivePresentResponse{
 		UpdatedResources: makeUpdatedResources(requestAt, nil, nil, nil, nil, nil, nil, obtainPresent),
 	})
+}
+
+func BulkUpsertUserItems(db *sqlx.Tx, table string, userItems []*UserItem) (string, error) {
+	values := []string{}
+	for _, item := range userItems {
+		values = append(values, fmt.Sprintf("(%d, %d, %d, %d, %d, %d, %d)", item.ID, item.UserID, item.ItemID, item.ItemType, item.Amount, item.CreatedAt, item.UpdatedAt))
+	}
+	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES %s ON DUPLICATE KEY UPDATE %s",
+		table,
+		"id, user_id, item_id, item_type, amount, created_at, updated_at",
+		strings.Join(values, ", "),
+		"amount = VALUES(amount), updated_at = VALUES(updated_at)",
+	)
+
+	return query, nil
 }
