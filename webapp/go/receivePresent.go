@@ -23,6 +23,15 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		return errorResponse(c, http.StatusBadRequest, err)
 	}
 
+	user := new(User)
+	query := "SELECT * FROM users WHERE id=?"
+	if err := h.DB.Get(user, query, userID); err != nil {
+		if err == ErrUserNotFound {
+			return errorResponse(c, http.StatusNotFound, err)
+		}
+		return errorResponse(c, http.StatusInternalServerError, err)
+	}
+
 	requestAt, err := getRequestTime(c)
 	if err != nil {
 		return errorResponse(c, http.StatusInternalServerError, ErrGetRequestTime)
@@ -40,7 +49,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// 未取得のプレゼント取得
-	query := "SELECT * FROM user_presents WHERE id IN (?) AND deleted_at IS NULL"
+	query = "SELECT * FROM user_presents WHERE id IN (?) AND deleted_at IS NULL"
 	query, params, err := sqlx.In(query, req.PresentIDs)
 	if err != nil {
 		return errorResponse(c, http.StatusBadRequest, err)
@@ -93,14 +102,6 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// Coin配布処理
-	user := new(User)
-	query = "SELECT * FROM users WHERE id=?"
-	if err := tx.Get(user, query, userID); err != nil {
-		if err == ErrUserNotFound {
-			return errorResponse(c, http.StatusNotFound, err)
-		}
-		return errorResponse(c, http.StatusInternalServerError, err)
-	}
 	amount := int64(0)
 	for _, v := range obtainCoinPresent {
 		amount += int64(v.Amount)
