@@ -65,6 +65,57 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		})
 	}
 
+	// master check
+	obtainCardPresent := make([]*UserPresent, 0)
+	for _, v := range obtainPresent {
+		if v.ItemType == 2 {
+			obtainCardPresent = append(obtainCardPresent, v)
+		}
+	}
+
+	obtainCardPresentItemIDs := make([]int64, 0)
+	for _, v := range obtainCardPresent {
+		obtainCardPresentItemIDs = append(obtainCardPresentItemIDs, v.ItemID)
+	}
+
+	cardItemMasters := make([]*ItemMaster, 0)
+	if len(obtainCardPresentItemIDs) != 0 {
+		query = "SELECT * FROM item_masters WHERE id IN (?) AND item_type = 2"
+		query, params, err = sqlx.In(query, obtainCardPresentItemIDs)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+		if err := h.DB.Select(&cardItemMasters, query, params...); err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
+
+	obtainEnhancePresent := make([]*UserPresent, 0)
+	for _, v := range obtainPresent {
+		if v.ItemType == 3 || v.ItemType == 4 {
+			obtainEnhancePresent = append(obtainEnhancePresent, v)
+		}
+	}
+
+	obtainEnhancePresentItemIDs := make([]int64, 0)
+	for _, v := range obtainEnhancePresent {
+		obtainEnhancePresentItemIDs = append(obtainEnhancePresentItemIDs, v.ItemID)
+	}
+
+	enhanceItemMasters := make([]*ItemMaster, 0)
+	if len(obtainEnhancePresentItemIDs) != 0 {
+		query = "SELECT * FROM item_masters WHERE id IN (?) AND item_type IN (3, 4)"
+		query, params, err = sqlx.In(query, obtainEnhancePresentItemIDs)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+		if err := h.DB.Select(&enhanceItemMasters, query, params...); err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
+
+	// master check end
+
 	tx, err := h.DB.Beginx()
 	if err != nil {
 		return errorResponse(c, http.StatusInternalServerError, err)
@@ -113,30 +164,6 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// Card配布処理
-	obtainCardPresent := make([]*UserPresent, 0)
-	for _, v := range obtainPresent {
-		if v.ItemType == 2 {
-			obtainCardPresent = append(obtainCardPresent, v)
-		}
-	}
-
-	obtainCardPresentItemIDs := make([]int64, 0)
-	for _, v := range obtainCardPresent {
-		obtainCardPresentItemIDs = append(obtainCardPresentItemIDs, v.ItemID)
-	}
-
-	cardItemMasters := make([]*ItemMaster, 0)
-	if len(obtainCardPresentItemIDs) != 0 {
-		query = "SELECT * FROM item_masters WHERE id IN (?) AND item_type = 2"
-		query, params, err = sqlx.In(query, obtainCardPresentItemIDs)
-		if err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
-		}
-		if err := tx.Select(&cardItemMasters, query, params...); err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
-		}
-	}
-
 	obtainCards := make([]*UserCard, 0)
 	for _, v := range obtainCardPresent {
 		var item *ItemMaster
@@ -175,30 +202,6 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// 強化アイテム配布処理
-	obtainEnhancePresent := make([]*UserPresent, 0)
-	for _, v := range obtainPresent {
-		if v.ItemType == 3 || v.ItemType == 4 {
-			obtainEnhancePresent = append(obtainEnhancePresent, v)
-		}
-	}
-
-	obtainEnhancePresentItemIDs := make([]int64, 0)
-	for _, v := range obtainEnhancePresent {
-		obtainEnhancePresentItemIDs = append(obtainEnhancePresentItemIDs, v.ItemID)
-	}
-
-	enhanceItemMasters := make([]*ItemMaster, 0)
-	if len(obtainEnhancePresentItemIDs) != 0 {
-		query = "SELECT * FROM item_masters WHERE id IN (?) AND item_type IN (3, 4)"
-		query, params, err = sqlx.In(query, obtainEnhancePresentItemIDs)
-		if err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
-		}
-		if err := tx.Select(&enhanceItemMasters, query, params...); err != nil {
-			return errorResponse(c, http.StatusInternalServerError, err)
-		}
-	}
-
 	uitems := make([]*UserItem, 0)
 	if len(obtainEnhancePresentItemIDs) != 0 {
 		query = "SELECT * FROM user_items WHERE user_id=? AND item_id IN (?)"
