@@ -193,9 +193,10 @@ func (h *Handler) receivePresent(c echo.Context) error {
 				return errorResponse(c, http.StatusInternalServerError, err)
 			}
 		} else {
-			_, err = h.obtainEnhanceItemForRecieveItemOnlyUpdate(tx, uitem, int64(v.Amount), requestAt)
-
-			if err != nil {
+			uitem.Amount += int(int64(v.Amount))
+			uitem.UpdatedAt = requestAt
+			query := "UPDATE user_items SET amount=?, updated_at=? WHERE id=?"
+			if _, err := tx.Exec(query, uitem.Amount, uitem.UpdatedAt, uitem.ID); err != nil {
 				if err == ErrUserNotFound {
 					return errorResponse(c, http.StatusNotFound, err)
 				}

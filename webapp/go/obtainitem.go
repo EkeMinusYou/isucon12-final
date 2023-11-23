@@ -174,14 +174,3 @@ func (h *Handler) obtainEnhanceItemForRecieveItem(tx *sqlx.Tx, userID int64, ite
 
 	return uitem, nil
 }
-
-func (h *Handler) obtainEnhanceItemForRecieveItemOnlyUpdate(tx *sqlx.Tx, uitem *UserItem, obtainAmount int64, requestAt int64) (*UserItem, error) {
-	uitem.Amount += int(obtainAmount)
-	uitem.UpdatedAt = requestAt
-	query := "UPDATE user_items SET amount=?, updated_at=? WHERE id=?"
-	if _, err := tx.Exec(query, uitem.Amount, uitem.UpdatedAt, uitem.ID); err != nil {
-		return nil, err
-	}
-
-	return uitem, nil
-}
