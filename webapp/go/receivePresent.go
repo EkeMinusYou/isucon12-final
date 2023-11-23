@@ -144,14 +144,14 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		obtainEnhancePresentItemIDs = append(obtainEnhancePresentItemIDs, v.ItemID)
 	}
 
-	itemMasters := make([]*ItemMaster, 0)
+	enhanceItemMasters := make([]*ItemMaster, 0)
 	if len(obtainEnhancePresentItemIDs) != 0 {
 		query = "SELECT * FROM item_masters WHERE id IN (?) AND item_type IN (3, 4)"
 		query, params, err = sqlx.In(query, obtainEnhancePresentItemIDs)
 		if err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
-		if err := tx.Select(&itemMasters, query, params...); err != nil {
+		if err := tx.Select(&enhanceItemMasters, query, params...); err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 	}
@@ -171,7 +171,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	upsertUitems := make([]*UserItem, 0)
 	for _, v := range obtainEnhancePresent {
 		var seen bool
-		for _, itemMaster := range itemMasters {
+		for _, itemMaster := range enhanceItemMasters {
 			if v.ItemID == itemMaster.ID {
 				seen = true
 				break
