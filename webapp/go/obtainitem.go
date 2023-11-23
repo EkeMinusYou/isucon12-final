@@ -153,7 +153,7 @@ func (h *Handler) obtianEnhanceItem(tx *sqlx.Tx, userID, itemID int64, itemType 
 	return obtainItems, nil
 }
 
-func (h *Handler) obtianEnhanceItemForRecieveItem(tx *sqlx.Tx, userID int64, uitem *UserItem, itemID int64, itemType int, obtainAmount int64, requestAt int64) (*UserItem, error) {
+func (h *Handler) obtainEnhanceItemForRecieveItem(tx *sqlx.Tx, userID int64, uitem *UserItem, itemID int64, itemType int, obtainAmount int64, requestAt int64) (*UserItem, error) {
 	if uitem == nil {
 		uitemID, err := h.generateID()
 		if err != nil {

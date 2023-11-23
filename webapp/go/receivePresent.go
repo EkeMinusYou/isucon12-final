@@ -183,7 +183,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 			}
 		}
 
-		_, err = h.obtianEnhanceItemForRecieveItem(tx, userID, uitem, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+		_, err = h.obtainEnhanceItemForRecieveItem(tx, userID, uitem, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
 
 		if err != nil {
 			if err == ErrUserNotFound {
