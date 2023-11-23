@@ -24,6 +24,7 @@ import (
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
@@ -65,12 +66,19 @@ func Run() {
 
 	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
 	if projectID != "" {
+		res, err := resource.New(ctx,
+			resource.WithTelemetrySDK(),
+		)
+		if err != nil {
+			log.Fatalf("resource.New: %v", err)
+		}
 		exporter, err := texporter.New(texporter.WithProjectID(projectID))
 		if err != nil {
 			log.Fatalf("texporter.New: %v", err)
 		}
 		tp := sdktrace.NewTracerProvider(
 			sdktrace.WithBatcher(exporter),
+			sdktrace.WithResource(res),
 		)
 		defer tp.Shutdown(ctx) // flushes any pending spans, and closes connections.
 		otel.SetTracerProvider(tp)
