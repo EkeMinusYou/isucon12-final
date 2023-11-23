@@ -112,7 +112,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		return errorResponse(c, http.StatusInternalServerError, err)
 	}
 
-	// 配布処理
+	// Card配布処理
 	obtainCardPresent := make([]*UserPresent, 0)
 	for _, v := range obtainPresent {
 		if v.ItemType == 2 {
@@ -120,13 +120,37 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
+	obtainCardPresentItemIDs := make([]int64, 0)
 	for _, v := range obtainCardPresent {
-		_, err = h.obtainCards(tx, v.UserID, v.ItemID, v.ItemType, requestAt)
+		obtainCardPresentItemIDs = append(obtainCardPresentItemIDs, v.ItemID)
+	}
+
+	cardItemMasters := make([]*ItemMaster, 0)
+	if len(obtainCardPresentItemIDs) != 0 {
+		query = "SELECT * FROM item_masters WHERE id IN (?) AND item_type = 2"
+		query, params, err = sqlx.In(query, obtainCardPresentItemIDs)
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+		if err := tx.Select(&cardItemMasters, query, params...); err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+	}
+
+	for _, v := range obtainCardPresent {
+		var item *ItemMaster
+		for _, itemMaster := range cardItemMasters {
+			if v.ItemID == itemMaster.ID {
+				item = itemMaster
+				break
+			}
+		}
+		if item == nil {
+			return errorResponse(c, http.StatusNotFound, ErrItemNotFound)
+		}
+		_, err = h.obtainCardForReceive(tx, v.UserID, item, v.ItemType, requestAt)
 
 		if err != nil {
-			if err == ErrUserNotFound || err == ErrItemNotFound {
-				return errorResponse(c, http.StatusNotFound, err)
-			}
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
 	}
