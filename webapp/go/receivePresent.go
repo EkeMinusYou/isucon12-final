@@ -183,13 +183,24 @@ func (h *Handler) receivePresent(c echo.Context) error {
 			}
 		}
 
-		_, err = h.obtainEnhanceItemForRecieveItem(tx, userID, uitem, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
+		if uitem == nil {
+			_, err = h.obtainEnhanceItemForRecieveItem(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
 
-		if err != nil {
-			if err == ErrUserNotFound {
-				return errorResponse(c, http.StatusNotFound, err)
+			if err != nil {
+				if err == ErrUserNotFound {
+					return errorResponse(c, http.StatusNotFound, err)
+				}
+				return errorResponse(c, http.StatusInternalServerError, err)
 			}
-			return errorResponse(c, http.StatusInternalServerError, err)
+		} else {
+			_, err = h.obtainEnhanceItemForRecieveItemOnlyUpdate(tx, uitem, int64(v.Amount), requestAt)
+
+			if err != nil {
+				if err == ErrUserNotFound {
+					return errorResponse(c, http.StatusNotFound, err)
+				}
+				return errorResponse(c, http.StatusInternalServerError, err)
+			}
 		}
 	}
 
