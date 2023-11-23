@@ -113,11 +113,14 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	}
 
 	// 配布処理
+	obtainCardPresent := make([]*UserPresent, 0)
 	for _, v := range obtainPresent {
-		if v.ItemType != 2 {
-			continue
+		if v.ItemType == 2 {
+			obtainCardPresent = append(obtainCardPresent, v)
 		}
+	}
 
+	for _, v := range obtainCardPresent {
 		_, err = h.obtainCards(tx, v.UserID, v.ItemID, v.ItemType, requestAt)
 
 		if err != nil {
