@@ -137,6 +137,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
+	obtainCards := make([]*UserCard, 0)
 	for _, v := range obtainCardPresent {
 		var item *ItemMaster
 		for _, itemMaster := range cardItemMasters {
@@ -148,8 +149,26 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		if item == nil {
 			return errorResponse(c, http.StatusNotFound, ErrItemNotFound)
 		}
-		_, err = h.obtainCardForReceive(tx, v.UserID, item, v.ItemType, requestAt)
 
+		cID, err := h.generateID()
+		if err != nil {
+			return errorResponse(c, http.StatusInternalServerError, err)
+		}
+		card := &UserCard{
+			ID:           cID,
+			UserID:       userID,
+			CardID:       item.ID,
+			AmountPerSec: *item.AmountPerSec,
+			Level:        1,
+			TotalExp:     0,
+			CreatedAt:    requestAt,
+			UpdatedAt:    requestAt,
+		}
+		obtainCards = append(obtainCards, card)
+	}
+	// bulk insert
+	if len(obtainCards) > 0 {
+		_, err := tx.NamedExec("INSERT INTO user_cards(id, user_id, card_id, amount_per_sec, level, total_exp, created_at, updated_at) VALUES (:id, :user_id, :card_id, :amount_per_sec, :level, :total_exp, :created_at, :updated_at)", obtainCards)
 		if err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
