@@ -152,25 +152,3 @@ func (h *Handler) obtianEnhanceItem(tx *sqlx.Tx, userID, itemID int64, itemType 
 
 	return obtainItems, nil
 }
-
-func (h *Handler) obtainEnhanceItemForRecieveItem(tx *sqlx.Tx, userID int64, itemID int64, itemType int, obtainAmount int64, requestAt int64) (*UserItem, error) {
-	uitemID, err := h.generateID()
-	if err != nil {
-		return nil, err
-	}
-	uitem := &UserItem{
-		ID:        uitemID,
-		UserID:    userID,
-		ItemType:  itemType,
-		ItemID:    itemID,
-		Amount:    int(obtainAmount),
-		CreatedAt: requestAt,
-		UpdatedAt: requestAt,
-	}
-	query := "INSERT INTO user_items(id, user_id, item_id, item_type, amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
-	if _, err := tx.Exec(query, uitem.ID, userID, uitem.ItemID, uitem.ItemType, uitem.Amount, requestAt, requestAt); err != nil {
-		return nil, err
-	}
-
-	return uitem, nil
-}

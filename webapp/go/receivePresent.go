@@ -164,7 +164,7 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 	}
 
-	updateUitems := make([]*UserItem, 0)
+	upsertUitems := make([]*UserItem, 0)
 	for _, v := range obtainEnhancePresent {
 		var seen bool
 		for _, itemMaster := range itemMasters {
@@ -186,23 +186,30 @@ func (h *Handler) receivePresent(c echo.Context) error {
 		}
 
 		if uitem == nil {
-			_, err = h.obtainEnhanceItemForRecieveItem(tx, userID, v.ItemID, v.ItemType, int64(v.Amount), requestAt)
-
+			uitemID, err := h.generateID()
 			if err != nil {
-				if err == ErrUserNotFound {
-					return errorResponse(c, http.StatusNotFound, err)
-				}
 				return errorResponse(c, http.StatusInternalServerError, err)
 			}
+			uitem := &UserItem{
+				ID:        uitemID,
+				UserID:    userID,
+				ItemType:  v.ItemType,
+				ItemID:    v.ItemID,
+				Amount:    int(int64(v.Amount)),
+				CreatedAt: requestAt,
+				UpdatedAt: requestAt,
+			}
+			upsertUitems = append(upsertUitems, uitem)
+
 		} else {
 			uitem.Amount += int(int64(v.Amount))
 			uitem.UpdatedAt = requestAt
-			updateUitems = append(updateUitems, uitem)
+			upsertUitems = append(upsertUitems, uitem)
 		}
 	}
 
-	if len(updateUitems) != 0 {
-		query, err := BulkUpsertUserItems(tx, "user_items", updateUitems)
+	if len(upsertUitems) != 0 {
+		query, err := BulkUpsertUserItems(tx, upsertUitems)
 		if err != nil {
 			return errorResponse(c, http.StatusInternalServerError, err)
 		}
@@ -222,13 +229,13 @@ func (h *Handler) receivePresent(c echo.Context) error {
 	})
 }
 
-func BulkUpsertUserItems(db *sqlx.Tx, table string, userItems []*UserItem) (string, error) {
+func BulkUpsertUserItems(db *sqlx.Tx, userItems []*UserItem) (string, error) {
 	values := []string{}
 	for _, item := range userItems {
 		values = append(values, fmt.Sprintf("(%d, %d, %d, %d, %d, %d, %d)", item.ID, item.UserID, item.ItemID, item.ItemType, item.Amount, item.CreatedAt, item.UpdatedAt))
 	}
 	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES %s ON DUPLICATE KEY UPDATE %s",
-		table,
+		"user_items",
 		"id, user_id, item_id, item_type, amount, created_at, updated_at",
 		strings.Join(values, ", "),
 		"amount = VALUES(amount), updated_at = VALUES(updated_at)",
