@@ -80,7 +80,7 @@ func Run() {
 			sdktrace.WithBatcher(exporter),
 			sdktrace.WithResource(res),
 		)
-		defer tp.Shutdown(ctx) // flushes any pending spans, and closes connections.
+		defer tp.Shutdown(ctx)
 		otel.SetTracerProvider(tp)
 		e.Use(otelecho.Middleware("isuconquest"))
 		log.Printf("Tracing to project %s", projectID)
