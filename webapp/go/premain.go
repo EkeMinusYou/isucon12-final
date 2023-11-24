@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
 	"os"
@@ -8,13 +9,54 @@ import (
 	"runtime/pprof"
 	"syscall"
 
+	"cloud.google.com/go/profiler"
+	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	"github.com/felixge/fgprof"
+	_ "github.com/go-sql-driver/mysql"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
 var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 var fcpuprofile = flag.String("fcpuprofile", "", "write fgprof cpu profile to file")
 
 func main() {
+	ctx := context.Background()
+
+	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	if projectID != "" {
+		cfg := profiler.Config{
+			Service:        "isuconquest",
+			ServiceVersion: "1.0.0",
+			ProjectID:      projectID,
+		}
+
+		if err := profiler.Start(cfg); err != nil {
+			log.Fatalf("failed to start profiler: %v", err)
+		}
+
+		res, err := resource.New(ctx,
+			resource.WithTelemetrySDK(),
+		)
+		if err != nil {
+			log.Fatalf("resource.New: %v", err)
+		}
+		exporter, err := texporter.New(texporter.WithProjectID(projectID))
+		if err != nil {
+			log.Fatalf("texporter.New: %v", err)
+		}
+		tp := sdktrace.NewTracerProvider(
+			sdktrace.WithBatcher(exporter),
+			sdktrace.WithResource(res),
+		)
+		defer tp.Shutdown(ctx)
+		otel.SetTracerProvider(tp)
+		log.Printf("Tracing to project %s", projectID)
+	} else {
+		log.Printf("GOOGLE_CLOUD_PROJECT not set, not tracing")
+	}
+
 	flag.Parse()
 
 	var cpuCloser func()

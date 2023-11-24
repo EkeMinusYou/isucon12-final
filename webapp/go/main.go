@@ -1,12 +1,10 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -15,7 +13,6 @@ import (
 	"strconv"
 	"time"
 
-	texporter "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
@@ -23,9 +20,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/pkg/errors"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/sdk/resource"
-	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
 var (
@@ -61,33 +55,9 @@ func Run() {
 	time.Local = time.FixedZone("Local", 9*60*60)
 
 	e := echo.New()
-
-	ctx := context.Background()
-
-	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
-	if projectID != "" {
-		res, err := resource.New(ctx,
-			resource.WithTelemetrySDK(),
-		)
-		if err != nil {
-			log.Fatalf("resource.New: %v", err)
-		}
-		exporter, err := texporter.New(texporter.WithProjectID(projectID))
-		if err != nil {
-			log.Fatalf("texporter.New: %v", err)
-		}
-		tp := sdktrace.NewTracerProvider(
-			sdktrace.WithBatcher(exporter),
-			sdktrace.WithResource(res),
-		)
-		defer tp.Shutdown(ctx)
-		otel.SetTracerProvider(tp)
+	if os.Getenv("GOOGLE_CLOUD_PROJECT") != "" {
 		e.Use(otelecho.Middleware("isuconquest"))
-		log.Printf("Tracing to project %s", projectID)
-	} else {
-		log.Printf("GOOGLE_CLOUD_PROJECT not set, not tracing")
 	}
-
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
